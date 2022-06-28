@@ -1,15 +1,17 @@
 const Worandle = ( () => {
 
-  const color_table = {
+  const COLOR_TABLE = {
     "gray": "#757575",
     "green": "#12a637",
     "yellow": "#d9d911"
   };
 
   const keyboard = "QWERTYUIOPASDFGHJKLZXCVBNM";
+  const WORD_LENGTH_MIN = 5;
+  const WORD_LENGTH_MAX = 9;
+  const ALLOWED_GUESSES = 6;
 
-  const word_length = Math.floor(Math.random() * 4) + 5;
-  const num_guesses = 6;
+  const word_length = Math.floor(Math.random() * (WORD_LENGTH_MAX - WORD_LENGTH_MIN)) + WORD_LENGTH_MIN;
 
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const correct_answer = []
@@ -21,6 +23,7 @@ const Worandle = ( () => {
 
   console.log(correct_answer);
 
+  let is_solved = false;
   let guess_counter = 0;
   let guess_string = [];
 
@@ -36,7 +39,7 @@ const Worandle = ( () => {
       parent_row.appendChild(clone);
     }
 
-    for (let j = 1; j < num_guesses; j++) {
+    for (let j = 1; j < ALLOWED_GUESSES; j++) {
       clone = parent_row.cloneNode(true);
       clone.setAttribute('id', 'row-' + j);
       table.appendChild(clone);
@@ -46,17 +49,19 @@ const Worandle = ( () => {
   function keyboard_listener() {
     document.addEventListener('keydown', function(event) {
 
-      if (event.key == "Backspace") {
-        guess_string.pop();
-      } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_string.length < word_length) {
-        guess_string.push(event.key.toUpperCase());
-      } else if (event.key == "Enter" && guess_string.length == word_length) {
-        update_table(true);
-      } else {
-        return;
+      if (!is_solved) {
+        if (event.key == "Backspace") {
+          guess_string.pop();
+        } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_string.length < word_length) {
+          guess_string.push(event.key.toUpperCase());
+        } else if (event.key == "Enter" && guess_string.length == word_length) {
+          update_table(true);
+        } else {
+          return;
+        }
+  
+        update_table();
       }
-
-      update_table();
     });
 
     let key_button;
@@ -64,23 +69,29 @@ const Worandle = ( () => {
     for (let i = 1; i <= 26; i++) {
       key_button = document.getElementById(i);
       key_button.addEventListener("click", function(event) {
-        if (guess_string.length < word_length) {
-          guess_string.push(keyboard[i - 1]);
-          update_table();
+        if (!is_solved) {
+          if (guess_string.length < word_length) {
+            guess_string.push(keyboard[i - 1]);
+            update_table();
+          }
         }
       });
     }
 
     document.getElementById("enter").addEventListener("click", function(event) {
-      if (guess_string.length == word_length) {
-        update_table(true);
+      if (!is_solved) {
+        if (guess_string.length == word_length) {
+          update_table(true);
+        }
       }
     });
 
     document.getElementById("delete").addEventListener("click", function(event) {
-      if (guess_string.length > 0) {
-        guess_string.pop();
-        update_table();
+      if (!is_solved) {
+        if (guess_string.length > 0) {
+          guess_string.pop();
+          update_table();
+        }
       }
     });
   }
@@ -100,6 +111,8 @@ const Worandle = ( () => {
       }
     } else {
 
+      let correct_counter = 0;
+
       for (let i = 0; i < word_length; i++) {
 
         let color = "";
@@ -107,17 +120,23 @@ const Worandle = ( () => {
 
         if (guess_string[i] == correct_answer[i]) {
           color = "green";
+          correct_counter++;
         } else if (correct_answer.includes(guess_string[i])) {
           color = "yellow";
         } else {
           color = "gray";
         }
 
-        column.setAttribute('style', "background-color: " + color_table[color] + "; border-color: " + color_table[color] + ";");
+        column.setAttribute('style', "background-color: " + COLOR_TABLE[color] + "; border-color: " + COLOR_TABLE[color] + ";");
       }
 
-      guess_counter++;
-      guess_string = [];
+      if (correct_counter < word_length) {
+        guess_counter++;
+        guess_string = [];
+      } else {
+        is_solved = true;
+      }
+
     }
 
   }
