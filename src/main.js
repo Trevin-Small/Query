@@ -1,6 +1,6 @@
 import { Database } from "./database_functions";
 
-export const worandle = ( () => {
+export const Worandle = (async () => {
 
   const COLOR_TABLE = {
     "gray": "#757575",
@@ -11,23 +11,37 @@ export const worandle = ( () => {
   const keyboard = "QWERTYUIOPASDFGHJKLZXCVBNM";
   const ALLOWED_GUESSES = 6;
 
-  const word_obj = Database.get_daily_word();
-  const correct_answer = word_obj["word"];
-  const word_length = word_obj["length"];
-  const dictionary = Database.get_dictionary();
-  const stats = Database.get_stats();
-
-  console.log("Todays word: " + correct_answer);
-  console.log(dictionary);
+  let daily_word = await Database.get_data('DAILY_WORD', true);
+  let dictionary = await Database.get_data('DICTIONARY/DICT_' + daily_word["LENGTH"], false);
+  let stats = await Database.get_data('STATS', true);
 
   let is_solved = false;
   let guess_counter = 0;
-  let guess_string = [];
+  let guess_arr = [];
+
+  console.log("Word: " + daily_word["WORD"]);
+  console.log(dictionary);
+
+  function guess_str() {
+    let guess_string = "";
+
+    guess_arr.forEach((char) => {
+      guess_string += char;
+    });
+
+    return guess_string;
+  }
 
   function is_valid_guess() {
+
+    let guess_string = guess_str();
+    console.log("Guess str: " + guess_string);
+
     if (dictionary[guess_string] == "") {
       return true;
     }
+
+    console.log("Invalid guess");
     return false;
   }
 
@@ -37,7 +51,7 @@ export const worandle = ( () => {
     let parent_col = document.getElementById("col-0");
     let clone;
 
-    for (let i = 1; i < word_length; i++) {
+    for (let i = 1; i < daily_word["LENGTH"]; i++) {
       clone = parent_col.cloneNode(true);
       clone.setAttribute('id', 'col-' + i);
       parent_row.appendChild(clone);
@@ -55,15 +69,19 @@ export const worandle = ( () => {
 
       if (!is_solved) {
         if (event.key == "Backspace") {
-          guess_string.pop();
-        } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_string.length < word_length) {
-          guess_string.push(event.key.toUpperCase());
-        } else if (event.key == "Enter" && guess_string.length == word_length && is_valid_guess()) {
-          update_table(true);
+          guess_arr.pop();
+        } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_arr.length < daily_word["LENGTH"]) {
+          guess_arr.push(event.key.toUpperCase());
+        } else if (event.key == "Enter" && guess_arr.length == daily_word["LENGTH"]) {
+          if (is_valid_guess()) {
+            update_table(true);
+          } else {
+            error_message("Sorry, '" + guess_str() + "' isn't in our dictionary!");
+          }
         } else {
           return;
         }
-  
+
         update_table();
       }
     });
@@ -74,8 +92,8 @@ export const worandle = ( () => {
       key_button = document.getElementById(i);
       key_button.addEventListener("click", function(event) {
         if (!is_solved) {
-          if (guess_string.length < word_length) {
-            guess_string.push(keyboard[i - 1]);
+          if (guess_arr.length < daily_word["LENGTH"]) {
+            guess_arr.push(keyboard[i - 1]);
             update_table();
           }
         }
@@ -84,16 +102,20 @@ export const worandle = ( () => {
 
     document.getElementById("enter").addEventListener("click", function(event) {
       if (!is_solved) {
-        if (guess_string.length == word_length && is_valid_guess()) {
-          update_table(true);
+        if (guess_arr.length == daily_word["LENGTH"]) {
+          if (is_valid_guess()) {
+            update_table(true);
+          } else {
+            error_message("Sorry, '" + guess_str() + "' isn't in our dictionary!");
+          }
         }
       }
     });
 
     document.getElementById("delete").addEventListener("click", function(event) {
       if (!is_solved) {
-        if (guess_string.length > 0) {
-          guess_string.pop();
+        if (guess_arr.length > 0) {
+          guess_arr.pop();
           update_table();
         }
       }
@@ -106,26 +128,26 @@ export const worandle = ( () => {
     let cols = row.children;
 
     if (!enter_was_pressed) {
-      for (let i = 0; i < guess_string.length; i++) {
-        cols[i].querySelector('#letter').innerHTML = guess_string[i]
+      for (let i = 0; i < guess_arr.length; i++) {
+        cols[i].querySelector('#letter').innerHTML = guess_arr[i]
       }
 
-      for (let i = guess_string.length; i < word_length; i++) {
+      for (let i = guess_arr.length; i < daily_word["LENGTH"]; i++) {
         cols[i].querySelector('#letter').innerHTML = '';
       }
     } else {
 
       let correct_counter = 0;
 
-      for (let i = 0; i < word_length; i++) {
+      for (let i = 0; i < daily_word["LENGTH"]; i++) {
 
         let color = "";
         let column = cols[i].querySelector('#letter-div');
 
-        if (guess_string[i] == correct_answer[i]) {
+        if (guess_arr[i] == daily_word["WORD"][i]) {
           color = "green";
           correct_counter++;
-        } else if (correct_answer.includes(guess_string[i])) {
+        } else if (daily_word["WORD"].includes(guess_arr[i])) {
           color = "yellow";
         } else {
           color = "gray";
@@ -134,9 +156,9 @@ export const worandle = ( () => {
         column.setAttribute('style', "background-color: " + COLOR_TABLE[color] + "; border-color: " + COLOR_TABLE[color] + ";");
       }
 
-      if (correct_counter < word_length) {
+      if (correct_counter < daily_word["LENGTH"]) {
         guess_counter++;
-        guess_string = [];
+        guess_arr = [];
       } else {
         is_solved = true;
       }
@@ -145,13 +167,11 @@ export const worandle = ( () => {
 
   }
 
-  function init() {
-    draw_table();
-    keyboard_listener();
+  function error_message() {
+    
   }
 
-  return {
-    init,
-  }
+  draw_table();
+  keyboard_listener();
 
 })();
