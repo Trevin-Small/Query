@@ -3,7 +3,7 @@
 const fs = require('fs');
 const desired_length = 9;
 
-let rawdata = fs.readFileSync('full_dictionary.json');
+let rawdata = fs.readFileSync('./dictionary/full_dictionary.json');
 let full_dictionary = JSON.parse(rawdata);
 let shortened_dictionary = {};
 
@@ -16,4 +16,4 @@ for (const [key, value] of Object.entries(full_dictionary)) {
 }
 
 let data = JSON.stringify(shortened_dictionary);
-fs.writeFileSync('../dist/dictionary/dict_' + desired_length + '.json', data);
+fs.writeFileSync('./dictionary/dict_' + desired_length + '.json', data);

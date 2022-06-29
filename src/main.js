@@ -1,4 +1,6 @@
-const Worandle = ( () => {
+import { Database } from "./database_functions";
+
+export const worandle = ( () => {
 
   const COLOR_TABLE = {
     "gray": "#757575",
@@ -7,25 +9,27 @@ const Worandle = ( () => {
   };
 
   const keyboard = "QWERTYUIOPASDFGHJKLZXCVBNM";
-  const WORD_LENGTH_MIN = 5;
-  const WORD_LENGTH_MAX = 9;
   const ALLOWED_GUESSES = 6;
 
-  const word_length = Math.floor(Math.random() * (WORD_LENGTH_MAX - WORD_LENGTH_MIN)) + WORD_LENGTH_MIN;
+  const word_obj = Database.get_daily_word();
+  const correct_answer = word_obj["word"];
+  const word_length = word_obj["length"];
+  const dictionary = Database.get_dictionary();
+  const stats = Database.get_stats();
 
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const correct_answer = []
-
-  for (let i = 0; i < word_length; i++) {
-    let index = Math.random() * 24;
-    correct_answer.push(possible.substring(index, index + 1));
-  }
-
-  console.log(correct_answer);
+  console.log("Todays word: " + correct_answer);
+  console.log(dictionary);
 
   let is_solved = false;
   let guess_counter = 0;
   let guess_string = [];
+
+  function is_valid_guess() {
+    if (dictionary[guess_string] == "") {
+      return true;
+    }
+    return false;
+  }
 
   function draw_table() {
     let table = document.getElementById("word-table");
@@ -54,7 +58,7 @@ const Worandle = ( () => {
           guess_string.pop();
         } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_string.length < word_length) {
           guess_string.push(event.key.toUpperCase());
-        } else if (event.key == "Enter" && guess_string.length == word_length) {
+        } else if (event.key == "Enter" && guess_string.length == word_length && is_valid_guess()) {
           update_table(true);
         } else {
           return;
@@ -80,7 +84,7 @@ const Worandle = ( () => {
 
     document.getElementById("enter").addEventListener("click", function(event) {
       if (!is_solved) {
-        if (guess_string.length == word_length) {
+        if (guess_string.length == word_length && is_valid_guess()) {
           update_table(true);
         }
       }
@@ -151,7 +155,3 @@ const Worandle = ( () => {
   }
 
 })();
-
-window.onload = (() => {
-  Worandle.init();
-});

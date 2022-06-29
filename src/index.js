@@ -1,6 +1,32 @@
-import {  } from '';
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from "firebase/database";
 
-// Expose all functions that need to be avaialable client-side after webpack bundle
+import { worandle } from './main.js';
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA3BKwSRjYtq48zpbWC2XmgBRRbeEp0uK4",
+  authDomain: "worandle.firebaseapp.com",
+  projectId: "worandle",
+  storageBucket: "worandle.appspot.com",
+  messagingSenderId: "572990137447",
+  appId: "1:572990137447:web:81020c199600deaafce0c2",
+  measurementId: "G-588PZK0BHC"
+};
+
+// Firebase initialization
+const app = initializeApp(firebaseConfig);
+// <-------------------------------------------------------------------------------------->
+
+// Initialize Realtime Database and get a reference to the service
+export const db = getDatabase(app);
+
+
+// <-------------------------------------------------------------------------------------->
+// <--------------- Expose any functions that the frontend needs to call ----------------->
+// <-------------------------------------------------------------------------------------->
+
 export {
-
+  worandle
 };
