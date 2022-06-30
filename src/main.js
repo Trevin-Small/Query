@@ -280,6 +280,7 @@ export const Worandle = (async () => {
    * Displays the popup window with the daily word and stats
    */
   function display_popup() {
+    let popup_shadow = document.getElementById('popup-shadow');
     let popup = document.getElementById("popup");
     let success_div = document.getElementById("success-div");
     let success_caption = document.getElementById("success-caption");
@@ -294,12 +295,13 @@ export const Worandle = (async () => {
       solve_percents.push(document.getElementById(i + "-%"));
     }
 
+    popup_shadow.style.display = "block";
     popup.style.display = "block";
     success_div.style.backgroundColor = win_state ? "green" : "red";
-    success_caption.innerHTML = win_state ? "COMPLETED" : "FAILED";
-    word_caption.innerHTML = "WORD: " + daily_word["WORD"];
+    success_caption.innerHTML = "PUZZLE " + (win_state ? "COMPLETED" : "FAILED");
+    word_caption.innerHTML = "WORD:" + daily_word["WORD"];
     guess_caption.innerHTML = "GUESSES: " + (guess_counter + 1);
-    solves_today.innerHTML = stats["SOLVES_TODAY"] + " SOLVES TODAY";
+    solves_today.innerHTML = stats["SOLVES_TODAY"] + " SOLVES GLOBALLY";
 
     for (let i = 0; i < ALLOWED_GUESSES; i++) {
       let percent = stats["SOLVES_TODAY"] > 0 ? stats["GUESS_DISTRIBUTIONS"][i] * 100 / stats["SOLVES_TODAY"] : 0;

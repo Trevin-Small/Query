@@ -19,39 +19,36 @@
       <img src="./images/query.png" alt="Query logo" style="width:auto;height:2.75rem;margin-top:0.75rem;margin-bottom:0.75rem;"/>
     </div>
 
-    <div class="fixed w-auto h-auto max-w-lg max-h-md px-10 py-4 flex flex-col justify-center items-center rounded-lg bg-gray-700 text-gray-100 text-center font-mono" style="left:50%;top:40%;transform:translate(-50%,-50%);display:none;" id="popup">
-      <p class="font-semibold text-xl mt-1 mb-4" id="word-caption"></p>
-      <div class="flex flex-row justify-center text-gray-300">
+    <div class="fixed w-full h-full bg-black opacity-60" style="display:none;" id="popup-shadow"></div>
 
-        <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm">
-          <div class="mx-2 mt-1">
-            <p>PERFORMANCE</p>
-            <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
-          </div>
+    <div class="fixed h-auto max-w-md max-h-md px-10 pt-6 flex flex-col justify-center items-center rounded-2xl bg-gray-700 text-gray-100 text-center font-mono" style="left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:80%;" id="popup">
+      <div class="flex flex-col justify-center text-gray-300">
+
+        <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm mb-2">
           <div class="m-0 p-2 rounded-sm" id="success-div">
-            <p id="success-caption"></p>
-            <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
-            <p id="time-caption">TIME: </p>
-            <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
-            <p id="guess-caption"></p>
+            <p class="font-bold" id="success-caption"></p>
+            <div id="completed-stats">
+              <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
+              <p class="mt-2 mb-2" id="word-caption"></p>
+              <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
+              <p id="time-caption">TIME: </p>
+              <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
+              <p id="guess-caption"></p>
+            </div>
           </div>
-
-        </div>
-
-        <div class="flex flex-col justify-center border-2 border-gray-400 rounded-md mx-4" style="width:2px;">
 
         </div>
 
         <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm" id="graph-div">
           <div class="mx-2 mt-1">
-            <p>GLOBAL STATISTICS</p>
+            <p class="text-sm" id="solves-caption">GLOBAL STATS:</p>
             <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
           </div>
-          <div class="mx-2 mt-1">
-            <p id="solves-caption">SOLVES TODAY</p>
-            <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
-          </div>
-            <div class="w-full h-full m-0 p-0 rounded-sm flex flex-col justify-start items-start">
+            <div class="w-full h-full m-0 p-0 rounded-sm flex flex-col justify-start items-start text-sm">
+              <div class="flex flex-col justify-start mt-1">
+                <p class="ml-2" >NUMBER OF GUESSES</p>
+                <hr class="border border-gray-400 rouned-md">
+              </div>
               <div class="flex flex-row justify-start mt-1">
                 <p class="ml-2" >1</p>
                 <div class="h-4 mx-2" style="background-color:#5b98fa" id="1-guess"></div>
@@ -90,23 +87,20 @@
 
       </div>
 
-      <hr class="mt-3 mb-2 border-2 border-gray-400 rounded-md" style="height:2px;">
-
       <div class="h-auto flex flex-row justify-center items-center">
 
-        <button class="rounded-lg text-white font-sans text-lg px-3 py-2 m-1 flex flex-row items-center" style="background-color:#3b82f6">
-          <p>SHARE</p>
-          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;margin-right:0.2rem;" />
+        <button class="h-10 w-10 rounded-lg text-white font-sans m-1 flex flex-row justify-center items-center" style="background-color:white">
+          <img src="./images/github.svg" style="width:1.75rem;height:1.75rem;" />
         </button>
 
-        <button class="rounded-lg text-white font-sans text-lg px-3 py-2 m-1 flex flex-row items-center" style="background-color:#3b82f6">
+        <button class="h-10 rounded-lg text-white font-sans px-3 m-1 flex flex-row items-center" style="background-color:#3b82f6">
           <p>SHARE</p>
-          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;margin-right:0.2rem;" />
+          <img src="./images/share.svg" style="width:1.25rem;height:1.25rem;margin-left:0.4rem;margin-right:0.2rem;" />
         </button>
 
       </div>
 
-      <button onclick="getElementById('popup').style.display = 'none';">
+      <button onclick="getElementById('popup').style.display = 'none';getElementById('popup-shadow').style.display = 'none';">
         <img src="./images/x.svg" alt="Close window" style="width:1.5rem;height:auto;position:absolute;top:0;right:0;transform:translate(-25%, 20%)" />
       </button>
     </div>
