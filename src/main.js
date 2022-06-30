@@ -35,8 +35,11 @@ export const Worandle = (async () => {
   /* Retrieve the solution statistics from the database */
   let stats = await Database.get_data('STATS', true);
 
-  /* Puzzle solved state */
-  let is_solved = false;
+  /* Tracks whether the puzzle has been completed or not */
+  let is_completed = false;
+
+  /* Tracks the win state of the game */
+  let win_state = false;
 
   /* Number of guesses counter */
   let guess_counter = 0;
@@ -139,7 +142,7 @@ export const Worandle = (async () => {
   function keyboard_listener() {
     document.addEventListener('keydown', function(event) {
 
-      if (!is_solved) {
+      if (!is_completed) {
         if (event.key == "Backspace") {
           guess_arr.pop();
         } else if (event.key.length == 1 && event.key.match(/[a-zA-Z]/).length > 0 && guess_arr.length < daily_word["LENGTH"]) {
@@ -163,7 +166,7 @@ export const Worandle = (async () => {
     for (let i = 1; i <= 26; i++) {
       key_button = document.getElementById(i);
       key_button.addEventListener("click", function(event) {
-        if (!is_solved) {
+        if (!is_completed) {
           if (guess_arr.length < daily_word["LENGTH"]) {
             guess_arr.push(keyboard[i - 1]);
             update_table();
@@ -173,7 +176,7 @@ export const Worandle = (async () => {
     }
 
     document.getElementById("enter").addEventListener("click", function(event) {
-      if (!is_solved) {
+      if (!is_completed) {
         if (guess_arr.length == daily_word["LENGTH"]) {
           if (is_valid_guess()) {
             update_table(true);
@@ -185,7 +188,7 @@ export const Worandle = (async () => {
     });
 
     document.getElementById("delete").addEventListener("click", function(event) {
-      if (!is_solved) {
+      if (!is_completed) {
         if (guess_arr.length > 0) {
           guess_arr.pop();
           update_table();
@@ -252,13 +255,14 @@ export const Worandle = (async () => {
 
       /* WIN: If num correct letters = num of word letters */
       if (correct_counter == daily_word["LENGTH"]) {
-        is_solved = true;
+        is_completed = true;
+        win_state = true;
         message_tag(MESSAGES[guess_counter], true);
         display_popup();
 
        /* LOSE: If player reaches maximum number of guesses */
       }  else if (guess_counter == ALLOWED_GUESSES - 1) {
-        is_solved = true;
+        is_completed = true;
         message_tag(MESSAGES[guess_counter + 1], true);
         display_popup();
 
@@ -277,10 +281,16 @@ export const Worandle = (async () => {
    */
   function display_popup() {
     let popup = document.getElementById("popup");
-    let daily_word = document.getElementById("daily-word");
+    let success_div = document.getElementById("success-div");
+    let success_caption = document.getElementById("success-caption");
+    let word_caption = document.getElementById("word-caption");
+    let guess_caption = document.getElementById("guess-caption");
 
     popup.style.display = "block";
-    daily_word.innerHTML = daily_word["WORD"];
+    success_div.style.backgroundColor = win_state ? "green" : "red";
+    success_caption.innerHTML = win_state ? "COMPLETED" : "FAILED";
+    word_caption.innerHTML = "WORD: " + daily_word["WORD"];
+    guess_caption.innerHTML = "GUESSES: " + (guess_counter + 1);
   }
 
   /*
