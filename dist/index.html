@@ -23,9 +23,9 @@
       <p class="font-semibold text-xl mt-1 mb-4" id="word-caption"></p>
       <div class="flex flex-row justify-center text-gray-300">
 
-        <div class="flex flex-col justify-center border-gray-400 border-2 rounded-md text-left">
+        <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm">
           <div class="mx-2 mt-1">
-            <p >STATISTICS</p>
+            <p>PERFORMANCE</p>
             <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
           </div>
           <div class="m-0 p-2 rounded-sm" id="success-div">
@@ -42,25 +42,66 @@
 
         </div>
 
-        <div class="flex flex-col justify-center">
+        <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm" id="graph-div">
+          <div class="mx-2 mt-1">
+            <p>GLOBAL STATISTICS</p>
+            <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
+          </div>
+          <div class="mx-2 mt-1">
+            <p id="solves-caption">SOLVES TODAY</p>
+            <hr class="-mx-2 mt-1 mb-0 border-gray-400" style="border-width:1px;">
+          </div>
+            <div class="w-full h-full m-0 p-0 rounded-sm flex flex-col justify-start items-start">
+              <div class="flex flex-row justify-start mt-1">
+                <p class="ml-2" >1</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="1-guess"></div>
+                <p id="1-%">1</p>
+              </div>
+              <div class="flex flex-row justify-start mt-1">
+                <p class="ml-2" >2</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="2-guess"></div>
+                <p id="2-%">1</p>
+              </div>
+              <div class="flex flex-row justify-start mt-1">
+                <p class="ml-2" >3</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="3-guess"></div>
+                <p id="3-%">1</p>
+              </div>
+              <div class="flex flex-row justify-start mt-1">
+                <p class="ml-2" >4</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="4-guess">
+                </div>
+                <p id="4-%">1</p>
+              </div>
+              <div class="flex flex-row justify-start mt-1">
+                <p class="ml-2" >5</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="5-guess"></div>
+                <p id="5-%">1</p>
+              </div>
+              <div class="flex flex-row justify-start my-1">
+                <p class="ml-2">6</p>
+                <div class="h-4 mx-2" style="background-color:#5b98fa" id="6-guess"></div>
+                <p id="6-%">1</p>
+              </div>
+          </div>
 
         </div>
 
 
       </div>
 
-      <hr class="mt-3 mb-2 border-2 border-gray-400 rounded-md">
+      <hr class="mt-3 mb-2 border-2 border-gray-400 rounded-md" style="height:2px;">
 
       <div class="h-auto flex flex-row justify-center items-center">
 
         <button class="rounded-lg text-white font-sans text-lg px-3 py-2 m-1 flex flex-row items-center" style="background-color:#3b82f6">
           <p>SHARE</p>
-          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;" />
+          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;margin-right:0.2rem;" />
         </button>
 
         <button class="rounded-lg text-white font-sans text-lg px-3 py-2 m-1 flex flex-row items-center" style="background-color:#3b82f6">
           <p>SHARE</p>
-          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;" />
+          <img src="./images/share.svg" style="width:1.35rem;height:1.35rem;margin-left:0.4rem;margin-right:0.2rem;" />
         </button>
 
       </div>

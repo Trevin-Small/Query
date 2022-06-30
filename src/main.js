@@ -285,12 +285,27 @@ export const Worandle = (async () => {
     let success_caption = document.getElementById("success-caption");
     let word_caption = document.getElementById("word-caption");
     let guess_caption = document.getElementById("guess-caption");
+    let solves_today = document.getElementById("solves-caption");
+    let solve_graph = [];
+    let solve_percents = [];
+
+    for (let i = 1; i <= ALLOWED_GUESSES; i++) {
+      solve_graph.push(document.getElementById(i + "-guess"));
+      solve_percents.push(document.getElementById(i + "-%"));
+    }
 
     popup.style.display = "block";
     success_div.style.backgroundColor = win_state ? "green" : "red";
     success_caption.innerHTML = win_state ? "COMPLETED" : "FAILED";
     word_caption.innerHTML = "WORD: " + daily_word["WORD"];
     guess_caption.innerHTML = "GUESSES: " + (guess_counter + 1);
+    solves_today.innerHTML = stats["SOLVES_TODAY"] + " SOLVES TODAY";
+
+    for (let i = 0; i < ALLOWED_GUESSES; i++) {
+      let percent = stats["SOLVES_TODAY"] > 0 ? stats["GUESS_DISTRIBUTIONS"][i] * 100 / stats["SOLVES_TODAY"] : 0;
+      solve_graph[i].style.width = Math.floor((percent / 100) * (document.getElementById("graph-div").offsetWidth - 5)) + 5 + "px";
+      solve_percents[i].innerHTML = percent + "%";
+    }
   }
 
   /*
