@@ -67,3 +67,5 @@ node_modules/
 
 .DS_Store
 dist/bundle.js
+.DS_Store
+scripts/dictionary/dict_5_arr.json

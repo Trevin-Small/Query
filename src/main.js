@@ -15,7 +15,7 @@ export const Worandle = (async () => {
     "Just two takes! 🎉",
     "Excellent work! 💡",
     "Solid solve! 👍",
-    "Bit of a struggle! 😬",
+    "Late solve! 😬",
     "Close one! 😅",
     "You lose! 💩"
   ]
@@ -74,10 +74,13 @@ export const Worandle = (async () => {
    * rows and column divs that need to be displayed
    */
   function draw_table() {
-    let table = document.getElementById("word-table");
+    let table = [];
+    let table_container = document.getElementById("word-table");
     let parent_row = document.getElementById("row-0");
     let parent_col = document.getElementById("col-0");
     let clone;
+
+    table.push(parent_row);
 
     for (let i = 1; i < daily_word["LENGTH"]; i++) {
       clone = parent_col.cloneNode(true);
@@ -88,8 +91,45 @@ export const Worandle = (async () => {
     for (let j = 1; j < ALLOWED_GUESSES; j++) {
       clone = parent_row.cloneNode(true);
       clone.setAttribute('id', 'row-' + j);
-      table.appendChild(clone);
+      table_container.appendChild(clone);
+      table.push(clone);
     }
+
+    resize_table(table, table_container);
+  }
+
+  function resize_table(table) {
+    // 28rem is max width, times 16px conversion rate (rem -> px)
+    const MAX_WIDTH = 28 * 16;
+    const MARGIN = 1;
+
+    function resize() {
+      let remaining_height = document.getElementById("main-container").offsetHeight - document.getElementById("keyboard-container").offsetHeight - document.getElementById("message-tag").offsetHeight;
+      let remaining_width = document.getElementById("table-container").offsetWidth;
+
+      if (remaining_width > MAX_WIDTH) { remaining_width = MAX_WIDTH; }
+
+      console.log("Height: " + remaining_height);
+      console.log("Width: " + remaining_width);
+
+      table.forEach((row) => {
+        let y_height = (remaining_height / ALLOWED_GUESSES) - (2 * MARGIN * ALLOWED_GUESSES);
+        let x_width = (remaining_width / daily_word["LENGTH"]) - (2 * MARGIN * daily_word["LENGTH"]);
+        let table_dim = Math.min(x_width, y_height) + "px";
+        row.style.height = table_dim;
+
+        console.log("Cell Dim: " + table_dim);
+
+        for (let col = 0; col < daily_word["LENGTH"]; col++) {
+          row.children[col].style.width = table_dim;
+        }
+      });
+    }
+
+    resize();
+
+    window.addEventListener('resize', resize);
+
   }
 
   /*
@@ -208,24 +248,39 @@ export const Worandle = (async () => {
         column.setAttribute('style', "background-color: " + COLOR_TABLE[color] + "; border-color: " + COLOR_TABLE[color] + ";");
       }
 
-      /* If num correct letters = num of word letters -> correct answer */
+      console.log("Count: " + guess_counter);
+
+      /* WIN: If num correct letters = num of word letters */
       if (correct_counter == daily_word["LENGTH"]) {
         is_solved = true;
         message_tag(MESSAGES[guess_counter], true);
+        display_popup();
 
-      /* If num correct letters < num of word letters -> continue playing*/
+       /* LOSE: If player reaches maximum number of guesses */
+      }  else if (guess_counter == ALLOWED_GUESSES - 1) {
+        is_solved = true;
+        message_tag(MESSAGES[guess_counter + 1], true);
+        display_popup();
+
+      /* CONTINUE: If num correct letters < num of word letters */
       } else if (correct_counter < daily_word["LENGTH"]) {
         guess_counter++;
         guess_arr = [];
-
-      /* If player reaches maximum number of guesses, show loss message */
-      }  else if (guess_counter == ALLOWED_GUESSES) {
-        is_solved = true;
-        message_tag(MESSAGES[guess_counter + 1], true);
       }
 
     }
 
+  }
+
+  /*
+   * Displays the popup window with the daily word and stats
+   */
+  function display_popup() {
+    let popup = document.getElementById("popup");
+    let daily_word = document.getElementById("daily-word");
+
+    popup.style.display = "block";
+    daily_word.innerHTML = daily_word["WORD"];
   }
 
   /*

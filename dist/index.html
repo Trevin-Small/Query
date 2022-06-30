@@ -3,29 +3,41 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Worandle</title>
+    <title>Query!</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover user-scalable=no">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+
+    <link rel="icon" type="image/png" href="./images/favicon-32x32.png">
 
     <link href="output.css" rel="stylesheet">
 
-    <script src="./bundle.js" defer id="gameScript"></script>
-
   </head>
-  <body style="margin:0px;margin-bottom: env(safe-area-inset-bottom);background-color:#171717" class="fixed w-full h-full overflow-hidden p-0 flex flex-col items-center justify-start">
+  <body style="margin:0px;margin-bottom:env(safe-area-inset-bottom);background-color:#171717" class="fixed w-full h-full overflow-hidden flex flex-col items-center">
 
     <div class="bg-gray-900 w-full h-auto m-0 flex flex-row justify-center align-middle border-b-4 border-gray-700">
       <img src="./images/query.png" alt="Query logo" style="width:auto;height:2.75rem;margin-top:0.75rem;margin-bottom:0.5rem;"/>
     </div>
 
-    <div class="w-full h-full flex flex-col justify-evenly items-center">
-      <div class="w-auto h-auto flex flex-col justify-center items-center">
+    <div class="fixed w-auto h-auto max-w-md max-h-md px-12 py-4 flex flex-col justify-center items-center rounded-lg bg-gray-700 text-white text-lg text-center" style="left:50%;top:35%;transform:translate(-50%,-50%);display:none;" id="popup">
+      <p >Today's Word:</p>
+      <p class="font-semibold text-xl" id="todays-word">DRINK</p>
+      <button onclick="getElementById('popup').style.display = 'none';">
+        <img src="./images/x.svg" alt="Close window" style="width:1.5rem;height:auto;position:absolute;top:0;right:0;transform:translate(-20%, 15%)" />
+      </button>
+    </div>
 
-        <table class="w-full h-auto">
+    <div class="w-full h-full overflow-hidden flex flex-col items-center" style="flex:1;" id="main-container">
+
+      <!-- Table container -->
+      <div class="w-full h-full max-w-lg flex flex-col justify-center items-center my-4" id="table-container">
+
+        <!-- Input table elements -->
+        <table class="w-full h-full">
           <tbody id="word-table">
-            <tr class="w-full h-auto flex flex-row justify-evenly items-center" id="row-0">
-              <th style="margin:2px" id="col-0">
-                <div class="w-12 h-12 border border-gray-400 rounded-lg flex flex-col justify-center items-center text-white text-bold text-xl" id="letter-div">
+            <tr class="w-full h-auto flex flex-row justify-center items-center" style="margin:1px;" id="row-0">
+              <th style="margin:1px;height:100%;" id="col-0">
+                <div class="w-full h-full border border-gray-400 rounded-lg flex flex-col justify-center items-center text-white text-bold text-xl" id="letter-div">
                   <p id="letter"></p>
                 </div>
               </th>
@@ -35,48 +47,52 @@
 
       </div>
 
-      <div style="visibility:hidden" class="bg-blue-500 rounded-lg py-1 px-2 text-white font-light font-xl" id="message-tag">
-        <p id="message-text">Invalid word!</p>
+      <!-- Message Tag Elements -->
+      <div style="visibility:hidden" class="bg-blue-500 rounded-lg py-2 px-3 m-2 text-white font-light text-lg" id="message-tag">
+        <p id="message-text">placeholder message</p>
+      </div>
+
+      <!-- Keyboard Elements -->
+      <div class="w-full h-auto max-w-lg px-2 mb-3 justify-self-end flex flex-col justify-center items-center text-white font-semibold" id="keyboard-container">
+        <div class="w-full h-auto flex flex-row justify-center items-center">
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="1">Q</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="2">W</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="3">E</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="4">R</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="5">T</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="6">Y</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="7">U</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="8">I</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="9">O</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="10">P</div>
+        </div>
+        <div class="w-full h-auto flex flex-row justify-center items-center">
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="11">A</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="12">S</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="13">D</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="14">F</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="15">G</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="16">H</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="17">J</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="18">K</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="19">L</div>
+        </div>
+        <div class="w-full h-auto flex flex-row justify-center items-center">
+          <div style="width:13%;min-width:2.5rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="enter">Enter</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="20">Z</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="21">X</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="22">C</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="23">V</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="24">B</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="25">N</div>
+          <div class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" style="width:9%;min-width:1.25rem;" id="26">M</div>
+          <div style="width:13%;min-width:2.5rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="delete"><img src="images/backspace.png" alt="Del" style="object-fit:contain;max-height:1.5rem;" /></div>
+        </div>
       </div>
 
     </div>
 
-    <div class="w-full h-auto max-w-md px-2 mb-4 justify-self-end flex flex-col justify-center items-center text-white font-semibold">
-      <div class="w-full h-auto flex flex-row justify-center items-center">
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="1">Q</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="2">W</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="3">E</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="4">R</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="5">T</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="6">Y</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="7">U</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="8">I</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="9">O</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="10">P</div>
-      </div>
-      <div class="w-full h-auto flex flex-row justify-center items-center">
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="11">A</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="12">S</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="13">D</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="14">F</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="15">G</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="16">H</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="17">J</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="18">K</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="19">L</div>
-      </div>
-      <div class="w-full h-auto flex flex-row justify-center items-center">
-        <div style="width:13%;min-width:2.5rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="enter">Enter</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="20">Z</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="21">X</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="22">C</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="23">V</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="24">B</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="25">N</div>
-        <div style="width:9%;min-width:1.25rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="26">M</div>
-        <div style="width:13%;min-width:2.5rem;" class="h-12 bg-gray-600 rounded-lg m-0.5 flex flex-col justify-center items-center" id="delete"><img src="images/backspace.png" alt="Del" style="object-fit:contain;max-height:1.5rem;" /></div>
-      </div>
-    </div>
+    <script src="./bundle.js" id="gameScript"></script>
 
   </body>
 </html>
