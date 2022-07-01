@@ -76,7 +76,7 @@ export const Query = ( () => {
   function is_valid_guess() {
     let guess_string = guess_str();
 
-    if (dictionary[guess_string] == "") {
+    if (dictionary[guess_string] == 1) {
       return true;
     }
 
