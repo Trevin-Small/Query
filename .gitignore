@@ -66,14 +66,9 @@ node_modules/
 .env
 
 .DS_Store
-dist/bundle.js
-.DS_Store
-scripts/dictionary/dict_5_arr.json
-scripts/dictionary/full_dictionary.json
 scripts/dictionary/dict_4.json
 scripts/dictionary/dict_5.json
 scripts/dictionary/dict_6.json
 scripts/dictionary/dict_7.json
 scripts/dictionary/dict_8.json
 scripts/dictionary/dict_9.json
-.DS_Store
