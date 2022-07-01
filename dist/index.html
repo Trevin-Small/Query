@@ -13,18 +13,33 @@
     <link href="output.css" rel="stylesheet">
 
     <script src="./bundle.js" id="gameScript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
   </head>
   <body style="margin:0px;margin-bottom:env(safe-area-inset-bottom);background-color:#191919" class="fixed w-full h-full overflow-hidden flex flex-col items-center">
 
     <script>
       Game.Query.init();
+
+      $('#answer-example-share-button').on('click', () => {
+        if (navigator.share) {
+          navigator.share({
+              title: 'Query!',
+              text: 'The daily word game',
+              url: 'https://query.trevinsmall.com',
+            })
+            .then(() => console.log('Successful share'))
+            .catch((error) => console.log('Error sharing', error));
+        } else {
+          console.log('Share not supported on this browser, do it the old way.');
+        }
+      });
     </script>
 
     <div class="bg-gray-900 w-full h-auto m-0 py-2 flex flex-row justify-center items-center border-b-2 border-gray-800">
-      <img src="./images/query.png" alt="Query logo" class="h-11"/>
+      <img src="./images/query.png" alt="Query logo" style="width:45%;max-width:250px;"/>
       <button onclick="Game.Query.show_popup()">
-        <img src="./images/stats.svg" alt="statistics" class="absolute w-9 h-9" style="right:1rem;transform:translate(-50%, -50%)" />
+        <img src="./images/stats.svg" alt="statistics" class="absolute w-7 h-7" style="right:1rem;transform:translate(-50%, -50%)" />
       </button>
     </div>
 
@@ -96,11 +111,11 @@
 
       <div class="h-auto flex flex-row justify-center items-center mt-1">
 
-        <button class="h-10 w-10 rounded-lg text-white font-sans m-1 flex flex-row justify-center items-center" style="background-color:white">
+        <button class="h-10 w-10 rounded-lg text-white font-sans m-1 flex flex-row justify-center items-center" style="background-color:white" onclick="window.location.href='https://github.com/Trevin-Small/Query';">
           <img src="./images/github.svg" style="width:1.75rem;height:1.75rem;" />
-        </button onclick="window.location='https://github.com/Trevin-Small/Query'">
+        </button>
 
-        <button class="h-10 rounded-lg text-white font-sans px-3 m-1 flex flex-row items-center" style="background-color:#3b82f6">
+        <button class="h-10 rounded-lg text-white font-sans px-3 m-1 flex flex-row items-center" style="background-color:#3b82f6" id='answer-example-share-button'>
           <p>SHARE</p>
           <img src="./images/share.svg" style="width:1.25rem;height:1.25rem;margin-left:0.4rem;margin-right:0.2rem;" />
         </button>
@@ -115,10 +130,10 @@
     <div class="w-full h-full overflow-hidden flex flex-col items-center" style="flex:1;" id="main-container">
 
       <!-- Table container -->
-      <div class="w-full h-full max-w-lg flex flex-col justify-center items-center mt-4" id="table-container">
+      <div class="w-full h-full flex flex-col justify-center items-center mt-4" id="table-container">
 
         <!-- Input table elements -->
-        <table class="w-full h-full">
+        <table class="w-full h-full flex flex-col justify-center items-center">
           <tbody id="word-table" style="visibility:hidden">
             <tr class="w-full h-auto flex flex-row justify-center items-center" style="margin:1px;" id="row-0">
               <th style="margin:1px;height:100%;" id="col-0">

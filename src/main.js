@@ -114,22 +114,18 @@ export const Query = ( () => {
   }
 
   function resize_table(table) {
-    // 28rem is max width, times 16px conversion rate (rem -> px)
-    const MAX_WIDTH = 28 * 16;
     const MARGIN = 1;
 
     function resize() {
       let remaining_height = document.getElementById("main-container").offsetHeight - document.getElementById("keyboard-container").offsetHeight - document.getElementById("message-tag").offsetHeight;
       let remaining_width = document.getElementById("table-container").offsetWidth;
 
-      if (remaining_width > MAX_WIDTH) { remaining_width = MAX_WIDTH; }
-
       console.log("Height: " + remaining_height);
       console.log("Width: " + remaining_width);
 
       table.forEach((row) => {
-        let y_height = (remaining_height / ALLOWED_GUESSES) - (2 * MARGIN * ALLOWED_GUESSES);
-        let x_width = (remaining_width / daily_word["LENGTH"]) - (2 * MARGIN * daily_word["LENGTH"]);
+        let y_height = (remaining_height / ALLOWED_GUESSES) - (MARGIN * ALLOWED_GUESSES);
+        let x_width = (remaining_width / daily_word["LENGTH"]) - (MARGIN * daily_word["LENGTH"]);
         let table_dim = Math.min(x_width, y_height) + "px";
         row.style.height = table_dim;
 
@@ -267,10 +263,17 @@ export const Query = ( () => {
 
       /* WIN: If num correct letters = num of word letters */
       if (correct_counter == daily_word["LENGTH"]) {
-        is_completed = true;
         win_state = true;
+        is_completed = true;
         message_tag(MESSAGES[guess_counter], true);
         setTimeout(show_popup, 1500, true);
+
+        stats["SOLVES_TODAY"] += 1;
+        stats["GUESS_DISTRIBUTIONS"][guess_counter + 1] += 1;
+
+        console.log(stats);
+
+        Database.set_data("STATS", stats);
 
        /* LOSE: If player reaches maximum number of guesses */
       }  else if (guess_counter == ALLOWED_GUESSES - 1) {
@@ -325,6 +328,7 @@ export const Query = ( () => {
 
     for (let i = 0; i < ALLOWED_GUESSES; i++) {
       let percent = stats["SOLVES_TODAY"] > 0 ? stats["GUESS_DISTRIBUTIONS"][i] * 100 / stats["SOLVES_TODAY"] : 0;
+      percent = Math.round(percent * 10) / 10;
       solve_graph[i].style.width = Math.floor((percent / 100) * (document.getElementById("graph-div").offsetWidth - 5)) + 5 + "px";
       solve_percents[i].innerHTML = percent + "%";
     }

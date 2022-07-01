@@ -1,13 +1,11 @@
-import { ref, get, set, onValue } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 import { db } from './init.js';
 
 export const Database = (() => {
 
-  // set(ref(db, 'users/' + userId), {
-  //   username: name,
-  //   email: email,
-  //   profile_picture : imageUrl
-  // });
+  async function set_data(data_path, data) {
+    set(ref(db, data_path), data);
+  }
 
   async function get_data(data_path) {
     const data_ref = ref(db, data_path);
@@ -19,6 +17,7 @@ export const Database = (() => {
   }
 
   return {
+    set_data,
     get_data,
   }
 

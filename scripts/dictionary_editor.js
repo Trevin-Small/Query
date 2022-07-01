@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const desired_length = 9;
+const desired_length = 4;
 
 let rawdata = fs.readFileSync('./dictionary/full_dictionary.json');
 let full_dictionary = JSON.parse(rawdata);
