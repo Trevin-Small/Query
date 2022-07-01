@@ -12,26 +12,33 @@
 
     <link href="output.css" rel="stylesheet">
 
+    <script src="./bundle.js" id="gameScript"></script>
+
   </head>
   <body style="margin:0px;margin-bottom:env(safe-area-inset-bottom);background-color:#191919" class="fixed w-full h-full overflow-hidden flex flex-col items-center">
 
-    <div class="bg-gray-900 w-full h-auto m-0 flex flex-row justify-center align-middle border-b-2 border-gray-800">
-      <img src="./images/query.png" alt="Query logo" style="width:auto;height:2.75rem;margin-top:0.75rem;margin-bottom:0.75rem;"/>
+    <script>
+      Game.Query.init();
+    </script>
+
+    <div class="bg-gray-900 w-full h-auto m-0 py-2 flex flex-row justify-center items-center border-b-2 border-gray-800">
+      <img src="./images/query.png" alt="Query logo" class="h-11"/>
+      <button onclick="Game.Query.show_popup()">
+        <img src="./images/stats.svg" alt="statistics" class="absolute w-9 h-9" style="right:1rem;transform:translate(-50%, -50%)" />
+      </button>
     </div>
 
     <div class="fixed w-full h-full bg-black opacity-60" style="display:none;" id="popup-shadow"></div>
 
-    <div class="fixed h-auto max-w-md max-h-md px-10 pt-6 flex flex-col justify-center items-center rounded-2xl bg-gray-700 text-gray-100 text-center font-mono" style="left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:80%;" id="popup">
+    <div class="fixed h-auto max-w-md max-h-md px-10 pt-8 flex flex-col justify-center items-center rounded-2xl bg-gray-700 text-gray-100 text-center font-mono" style="left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:80%;" id="popup">
       <div class="flex flex-col justify-center text-gray-300">
 
         <div class="flex flex-col justify-start border-gray-400 border-2 rounded-md text-left text-sm mb-2">
           <div class="m-0 p-2 rounded-sm" id="success-div">
-            <p class="font-bold" id="success-caption"></p>
-            <div id="completed-stats">
+            <p class="font-bold" id="success-caption">PUZZLE INCOMPLETE</p>
+            <div style="display:none;" id="completed-div">
               <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
               <p class="mt-2 mb-2" id="word-caption"></p>
-              <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
-              <p id="time-caption">TIME: </p>
               <hr class="-mx-2 my-1 border-gray-400" style="border-width:1px;">
               <p id="guess-caption"></p>
             </div>
@@ -87,11 +94,11 @@
 
       </div>
 
-      <div class="h-auto flex flex-row justify-center items-center">
+      <div class="h-auto flex flex-row justify-center items-center mt-1">
 
         <button class="h-10 w-10 rounded-lg text-white font-sans m-1 flex flex-row justify-center items-center" style="background-color:white">
           <img src="./images/github.svg" style="width:1.75rem;height:1.75rem;" />
-        </button>
+        </button onclick="window.location='https://github.com/Trevin-Small/Query'">
 
         <button class="h-10 rounded-lg text-white font-sans px-3 m-1 flex flex-row items-center" style="background-color:#3b82f6">
           <p>SHARE</p>
@@ -100,7 +107,7 @@
 
       </div>
 
-      <button onclick="getElementById('popup').style.display = 'none';getElementById('popup-shadow').style.display = 'none';">
+      <button onclick="Game.Query.hide_popup()">
         <img src="./images/x.svg" alt="Close window" style="width:1.5rem;height:auto;position:absolute;top:0;right:0;transform:translate(-25%, 20%)" />
       </button>
     </div>
@@ -108,11 +115,11 @@
     <div class="w-full h-full overflow-hidden flex flex-col items-center" style="flex:1;" id="main-container">
 
       <!-- Table container -->
-      <div class="w-full h-full max-w-lg flex flex-col justify-center items-center my-4" id="table-container">
+      <div class="w-full h-full max-w-lg flex flex-col justify-center items-center mt-4" id="table-container">
 
         <!-- Input table elements -->
         <table class="w-full h-full">
-          <tbody id="word-table">
+          <tbody id="word-table" style="visibility:hidden">
             <tr class="w-full h-auto flex flex-row justify-center items-center" style="margin:1px;" id="row-0">
               <th style="margin:1px;height:100%;" id="col-0">
                 <div class="w-full h-full border border-gray-400 rounded-lg flex flex-col justify-center items-center text-white text-bold text-xl" id="letter-div">
@@ -126,7 +133,7 @@
       </div>
 
       <!-- Message Tag Elements -->
-      <div style="visibility:hidden" class="bg-blue-500 rounded-lg py-2 px-3 m-2 text-white font-light text-lg" id="message-tag">
+      <div style="visibility:hidden" class="bg-blue-500 rounded-lg py-1 px-3 m-1 text-white font-light" id="message-tag">
         <p id="message-text">placeholder message</p>
       </div>
 
@@ -169,8 +176,6 @@
       </div>
 
     </div>
-
-    <script src="./bundle.js" id="gameScript"></script>
 
   </body>
 </html>

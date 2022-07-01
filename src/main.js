@@ -1,6 +1,6 @@
 import { Database } from "./database_functions";
 
-export const Worandle = (async () => {
+export const Query = ( () => {
 
   /* Color codes for letter correctness indication */
   const COLOR_TABLE = {
@@ -27,13 +27,13 @@ export const Worandle = (async () => {
   const ALLOWED_GUESSES = 6;
 
   /* Retrieve the daily word from the database */
-  let daily_word = await Database.get_data('DAILY_WORD', true);
+  let daily_word;
 
   /* Retrieve the correct dictionary subset from the database */
-  let dictionary = await Database.get_data('DICTIONARY/DICT_' + daily_word["LENGTH"], false);
+  let dictionary;
 
   /* Retrieve the solution statistics from the database */
-  let stats = await Database.get_data('STATS', true);
+  let stats;
 
   /* Tracks whether the puzzle has been completed or not */
   let is_completed = false;
@@ -47,8 +47,19 @@ export const Worandle = (async () => {
   /* Array for storing user-input characters */
   let guess_arr = [];
 
-  console.log("Word: " + daily_word["WORD"]);
-  console.log(dictionary);
+  async function init() {
+    daily_word = await Database.get_data('DAILY_WORD', true);
+    dictionary = await Database.get_data('DICTIONARY/DICT_' + daily_word["LENGTH"], false);
+    stats = await Database.get_data('STATS', true);
+
+    console.log("Word: " + daily_word["WORD"]);
+    console.log(dictionary);
+    console.log(stats);
+
+    /* Required functions to run the game */
+    draw_table();
+    keyboard_listener();
+  }
 
   /* Takes the guess_arr[] and returns a string form */
   function guess_str() {
@@ -99,6 +110,7 @@ export const Worandle = (async () => {
     }
 
     resize_table(table, table_container);
+    table_container.style.visibility = 'visible';
   }
 
   function resize_table(table) {
@@ -258,13 +270,13 @@ export const Worandle = (async () => {
         is_completed = true;
         win_state = true;
         message_tag(MESSAGES[guess_counter], true);
-        display_popup();
+        setTimeout(show_popup, 1500, true);
 
        /* LOSE: If player reaches maximum number of guesses */
       }  else if (guess_counter == ALLOWED_GUESSES - 1) {
         is_completed = true;
         message_tag(MESSAGES[guess_counter + 1], true);
-        display_popup();
+        setTimeout(show_popup, 1500, true);
 
       /* CONTINUE: If num correct letters < num of word letters */
       } else if (correct_counter < daily_word["LENGTH"]) {
@@ -279,16 +291,26 @@ export const Worandle = (async () => {
   /*
    * Displays the popup window with the daily word and stats
    */
-  function display_popup() {
+  function show_popup(puzzle_completed = false) {
+
     let popup_shadow = document.getElementById('popup-shadow');
     let popup = document.getElementById("popup");
-    let success_div = document.getElementById("success-div");
-    let success_caption = document.getElementById("success-caption");
-    let word_caption = document.getElementById("word-caption");
-    let guess_caption = document.getElementById("guess-caption");
+    let completed_div = document.getElementById("completed-div");
     let solves_today = document.getElementById("solves-caption");
     let solve_graph = [];
     let solve_percents = [];
+
+    if (puzzle_completed) {
+      let success_div = document.getElementById("success-div");
+      let success_caption = document.getElementById("success-caption");
+      let word_caption = document.getElementById("word-caption");
+      let guess_caption = document.getElementById("guess-caption");
+
+      success_div.style.backgroundColor = win_state ? "green" : "red";
+      success_caption.innerHTML = "PUZZLE " + (win_state ? "COMPLETED" : "FAILED");
+      word_caption.innerHTML = "WORD: " + daily_word["WORD"];
+      guess_caption.innerHTML = "GUESSES: " + (guess_counter + 1);
+    }
 
     for (let i = 1; i <= ALLOWED_GUESSES; i++) {
       solve_graph.push(document.getElementById(i + "-guess"));
@@ -297,10 +319,8 @@ export const Worandle = (async () => {
 
     popup_shadow.style.display = "block";
     popup.style.display = "block";
-    success_div.style.backgroundColor = win_state ? "green" : "red";
-    success_caption.innerHTML = "PUZZLE " + (win_state ? "COMPLETED" : "FAILED");
-    word_caption.innerHTML = "WORD:" + daily_word["WORD"];
-    guess_caption.innerHTML = "GUESSES: " + (guess_counter + 1);
+    completed_div.style.display = "block";
+
     solves_today.innerHTML = stats["SOLVES_TODAY"] + " SOLVES GLOBALLY";
 
     for (let i = 0; i < ALLOWED_GUESSES; i++) {
@@ -308,6 +328,16 @@ export const Worandle = (async () => {
       solve_graph[i].style.width = Math.floor((percent / 100) * (document.getElementById("graph-div").offsetWidth - 5)) + 5 + "px";
       solve_percents[i].innerHTML = percent + "%";
     }
+  }
+
+  function hide_popup() {
+    let popup_shadow = document.getElementById('popup-shadow');
+    let popup = document.getElementById("popup");
+    let completed_div = document.getElementById("completed-div");
+
+    popup_shadow.style.display = "none";
+    popup.style.display = "none";
+    completed_div.style.display = "none";
   }
 
   /*
@@ -335,8 +365,10 @@ export const Worandle = (async () => {
     }
   }
 
-  /* Required functions to run the game */
-  draw_table();
-  keyboard_listener();
+  return {
+    init,
+    show_popup,
+    hide_popup
+  }
 
 })();
